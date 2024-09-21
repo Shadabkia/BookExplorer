@@ -1,7 +1,8 @@
-package com.kia.bookexplorer
+package com.kia.bookexplorer.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.kia.bookexplorer.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
