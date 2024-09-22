@@ -6,16 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.kia.bookexplorer.R
 import com.kia.bookexplorer.databinding.FragmentSearchBinding
+import com.kia.bookexplorer.ui.search.adapter.BookAdapter
+import com.kia.bookexplorer.ui.search.adapter.BookListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), BookListener {
 
     val viewModel by viewModels<SearchViewModel>()
     private var binding : FragmentSearchBinding? = null
 
+    val bookAdapter = BookAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +39,30 @@ class SearchFragment : Fragment() {
 
     private fun iniViews() {
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.book.collectLatest {
+                if (it != null) {
+                    bookAdapter.submitData(it)
+                }
+            }
+        }
+
+        binding?.apply {
+            rvBooks.apply {
+                adapter = bookAdapter
+                itemAnimator = null
+                postponeEnterTransition()
+                viewTreeObserver.addOnPreDrawListener {
+                    startPostponedEnterTransition()
+                    true
+                }
+            }
+        }
+    }
+
+
+    override fun onBookClicked(position: Int, bookTitle: String?) {
+        TODO("Not yet implemented")
     }
 
     override fun onDestroy() {
