@@ -75,7 +75,7 @@ object NetworkModule {
             .addInterceptor(logging)
             .addInterceptor(headerInterceptor)
 //            .addInterceptor(networkConnectionInterceptor)
-            .addInterceptor(cacheInterceptor)
+//            .addInterceptor(cacheInterceptor)
             .connectTimeout(10, TimeUnit.SECONDS) // connect timeout
             .writeTimeout(10, TimeUnit.SECONDS) // write timeout
             .readTimeout(10, TimeUnit.SECONDS) // read timeout

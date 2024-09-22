@@ -1,7 +1,6 @@
 package com.kia.bookexplorer.ui.search.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -13,18 +12,16 @@ import com.kia.bookexplorer.databinding.ItemBookBinding
 class BookViewHolder(
     private val binding: ItemBookBinding,
     private val listener: BookListener,
-    private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
     companion object {
         fun create(
             parent: ViewGroup,
             listener: BookListener,
-            context: Context
         ): BookViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemBookBinding.inflate(inflater, parent, false)
-            return BookViewHolder(binding, listener, context)
+            return BookViewHolder(binding, listener)
         }
     }
 
@@ -34,7 +31,7 @@ class BookViewHolder(
         binding.apply {
 
             tvBookTitle.text = book.title
-            tvBookAuthor.text = book.authorName?.fold("") { acc, s -> "$acc, $s" }
+            tvBookAuthor.text = book.authorName?.fold("") { acc, s -> "$acc, $s" }?.substring(2)
             tvBookYear.text = book.firstPublishYear.toString()
 
             // load image to ivCover with coil and a placeholder https://covers.openlibrary.org/b/id/10535178-s.jpg

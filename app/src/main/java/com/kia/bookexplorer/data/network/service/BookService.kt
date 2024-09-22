@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface BookService {
 
-    @GET
+    @GET("search.json")
     suspend fun getBooks(
         @Query("title") title: String,
         @Query("page") page: Int,

@@ -62,7 +62,6 @@ class SearchFragment : Fragment(), BookListener {
 
 
     override fun onBookClicked(position: Int, bookTitle: String?) {
-        TODO("Not yet implemented")
     }
 
     override fun onDestroy() {
