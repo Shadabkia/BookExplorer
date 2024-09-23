@@ -74,7 +74,7 @@ object NetworkModule {
             .cache(myCache)
             .addInterceptor(logging)
             .addInterceptor(headerInterceptor)
-//            .addInterceptor(networkConnectionInterceptor)
+            .addInterceptor(networkConnectionInterceptor)
 //            .addInterceptor(cacheInterceptor)
             .connectTimeout(10, TimeUnit.SECONDS) // connect timeout
             .writeTimeout(10, TimeUnit.SECONDS) // write timeout

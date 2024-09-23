@@ -20,6 +20,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import okhttp3.internal.notify
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -52,12 +53,9 @@ class SearchFragment : Fragment(), BookListener {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.book.collectLatest {
                 if (it != null) {
-                    binding?.rvBooks?.isVisible = true
-                    binding?.tvNoResult?.isVisible = false
                     bookAdapter.submitData(it)
                 } else {
-                    binding?.rvBooks?.isVisible = false
-                    binding?.tvNoResult?.isVisible = true
+                    bookAdapter.submitData(PagingData.empty())
                 }
             }
         }
@@ -83,17 +81,13 @@ class SearchFragment : Fragment(), BookListener {
                     pbLoadMore.isVisible = it.append is LoadState.Loading
 
                     if (it.refresh is LoadState.Error) {
-                        tvNoResult.isVisible =
-                            (it.refresh as LoadState.Error).error.message == "No Data"
+                        tvNoResult.isVisible = true
+                        tvNoResult.text = (it.refresh as LoadState.Error).error.message
                     } else {
                         tvNoResult.isVisible = false
                     }
 
-//                    if (it.refresh is LoadState.Loading) {
-//                        clLogoLoading.isVisible = true
-//                    } else {
-//                        clLogoLoading.isVisible = false
-//                    }
+                    pbMain.isVisible = it.refresh is LoadState.Loading
                 }
             }
         }
@@ -113,8 +107,10 @@ class SearchFragment : Fragment(), BookListener {
                     searchJob?.cancel()
                     searchJob = viewLifecycleOwner.lifecycleScope.launch {
                         newText?.let {
-                            delay(300)
+                            delay(330)
                             viewModel.clearBookList()
+                            bookAdapter.refresh()
+                            binding?.rvBooks?.scrollToPosition(0)
                             viewModel.getBookList(it)
                         }
                     }

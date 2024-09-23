@@ -43,7 +43,8 @@ class BookViewHolder(
                     crossfade(true)
                     placeholder(R.drawable.hard_cover_book)
                 }
-            }
+            } else
+                ivBookCover.setImageResource(R.drawable.hard_cover_book)
 
             root.setOnClickListener {
                 listener.onBookClicked(position = bindingAdapterPosition, book.title)

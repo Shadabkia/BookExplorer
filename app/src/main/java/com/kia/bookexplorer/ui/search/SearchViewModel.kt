@@ -35,7 +35,7 @@ private val bookRepository: BookRepository
     }
 
     fun clearBookList() {
-        _book.value = null
+        _book.value = PagingData.empty()
     }
 
 }
