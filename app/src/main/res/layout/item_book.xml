@@ -22,8 +22,8 @@
             android:layout_width="60dp"
             android:layout_height="80dp"
             android:contentDescription="@string/book_cover"
-            android:scaleType="centerCrop"
-            android:src="@drawable/fake_poster" />
+            android:scaleType="fitXY"
+            android:src="@drawable/hard_cover_book" />
     </androidx.cardview.widget.CardView>
 
     <!-- Book Cover Image -->

@@ -5,23 +5,31 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.paging.PagingData
 import com.kia.bookexplorer.R
 import com.kia.bookexplorer.databinding.FragmentSearchBinding
 import com.kia.bookexplorer.ui.search.adapter.BookAdapter
 import com.kia.bookexplorer.ui.search.adapter.BookListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SearchFragment : Fragment(), BookListener {
 
-    val viewModel by viewModels<SearchViewModel>()
-    private var binding : FragmentSearchBinding? = null
+    private val viewModel by viewModels<SearchViewModel>()
+    private var binding: FragmentSearchBinding? = null
 
-    val bookAdapter = BookAdapter(this)
+    private val bookAdapter = BookAdapter(this)
+    private var searchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,15 +47,24 @@ class SearchFragment : Fragment(), BookListener {
 
     private fun iniViews() {
 
+        initListeners()
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.book.collectLatest {
                 if (it != null) {
+                    binding?.rvBooks?.isVisible = true
+                    binding?.tvNoResult?.isVisible = false
                     bookAdapter.submitData(it)
+                } else {
+                    binding?.rvBooks?.isVisible = false
+                    binding?.tvNoResult?.isVisible = true
                 }
             }
         }
 
         binding?.apply {
+
+
             rvBooks.apply {
                 adapter = bookAdapter
                 itemAnimator = null
@@ -57,6 +74,53 @@ class SearchFragment : Fragment(), BookListener {
                     true
                 }
             }
+
+            lifecycleScope.launch {
+                bookAdapter.loadStateFlow.collectLatest {
+                    Timber.tag("loadStateFlow")
+                        .d("append ${it.append} prepend ${it.prepend} refresh ${it.refresh}")
+
+                    pbLoadMore.isVisible = it.append is LoadState.Loading
+
+                    if (it.refresh is LoadState.Error) {
+                        tvNoResult.isVisible =
+                            (it.refresh as LoadState.Error).error.message == "No Data"
+                    } else {
+                        tvNoResult.isVisible = false
+                    }
+
+//                    if (it.refresh is LoadState.Loading) {
+//                        clLogoLoading.isVisible = true
+//                    } else {
+//                        clLogoLoading.isVisible = false
+//                    }
+                }
+            }
+        }
+
+
+    }
+
+    private fun initListeners() {
+        binding?.apply {
+            svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    searchJob?.cancel()
+                    searchJob = viewLifecycleOwner.lifecycleScope.launch {
+                        newText?.let {
+                            delay(300)
+                            viewModel.clearBookList()
+                            viewModel.getBookList(it)
+                        }
+                    }
+                    return true
+                }
+            })
         }
     }
 

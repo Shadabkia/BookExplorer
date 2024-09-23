@@ -26,16 +26,16 @@ private val bookRepository: BookRepository
     private val _book = MutableStateFlow<PagingData<Book>?>(null)
     val book: StateFlow<PagingData<Book>?> get() = _book
 
-    init {
-        getBookList("harry",1)
-    }
-
-    private fun getBookList(title : String, page: Int) = viewModelScope.launch {
-        bookRepository.getBookList(title, page = page)
+    fun getBookList(title : String) = viewModelScope.launch {
+        bookRepository.getBookList(title, 1)
             .cachedIn(viewModelScope)
             .collectLatest { result ->
                 _book.value = result
             }
+    }
+
+    fun clearBookList() {
+        _book.value = null
     }
 
 }

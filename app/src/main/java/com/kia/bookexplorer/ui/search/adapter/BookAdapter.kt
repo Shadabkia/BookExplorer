@@ -12,7 +12,7 @@ class BookAdapter(
     private class DiffCallBack : DiffUtil.ItemCallback<Book>() {
 
         override fun areItemsTheSame(oldItem: Book, newItem: Book) =
-            oldItem.coverI == newItem.coverI
+            oldItem.version == newItem.version
 
         override fun areContentsTheSame(
             oldItem: Book,
@@ -23,7 +23,7 @@ class BookAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        BookViewHolder.create(parent, listener, parent.context)
+        BookViewHolder.create(parent, listener)
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it) }
