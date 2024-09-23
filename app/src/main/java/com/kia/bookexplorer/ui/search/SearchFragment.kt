@@ -6,12 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
+import com.google.android.material.transition.MaterialElevationScale
 import com.kia.bookexplorer.R
+import com.kia.bookexplorer.data.network.dto.Book
 import com.kia.bookexplorer.databinding.FragmentSearchBinding
 import com.kia.bookexplorer.ui.search.adapter.BookAdapter
 import com.kia.bookexplorer.ui.search.adapter.BookListener
@@ -20,7 +26,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import okhttp3.internal.notify
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -43,6 +48,11 @@ class SearchFragment : Fragment(), BookListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Show popup transition animation from BookDetailsFragment
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
         iniViews()
     }
 
@@ -107,7 +117,7 @@ class SearchFragment : Fragment(), BookListener {
                             delay(330)
                             viewModel.clearBookList()
                             bookAdapter.refresh()
-                            binding?.rvBooks?.scrollToPosition(0)
+//                            binding?.rvBooks?.scrollToPosition(0)
                             viewModel.getBookList(it)
                         }
                     }
@@ -117,8 +127,31 @@ class SearchFragment : Fragment(), BookListener {
         }
     }
 
+    override fun onBookClicked(view: View, book: Book) {
+        findNavController().navigate(
+            SearchFragmentDirections.actionSearchFragmentToBookDetailsFragment(
+                book
+            ),
+            setTransitionStuff(
+                getString(R.string.book_details_transition_name),
+                view
+            )
+        )
+    }
 
-    override fun onBookClicked(position: Int, bookTitle: String?) {
+    // Set transition animation
+    private fun setTransitionStuff(
+        viewTransitionName: String,
+        view: View
+    ): FragmentNavigator.Extras {
+        exitTransition = MaterialElevationScale(false).apply {
+            duration = resources.getInteger(R.integer.reply_motion_duration_large).toLong()
+        }
+        reenterTransition = MaterialElevationScale(true).apply {
+            duration = resources.getInteger(R.integer.reply_motion_duration_large).toLong()
+        }
+
+        return FragmentNavigatorExtras(view to viewTransitionName)
     }
 
     override fun onDestroy() {

@@ -20,9 +20,6 @@ class SearchViewModel @Inject constructor(
 private val bookRepository: BookRepository
 ): ViewModel() {
 
-    private val searchEventsChannel = Channel<SearchEvents>()
-    val bookListEvents = searchEventsChannel.receiveAsFlow()
-
     private val _book = MutableStateFlow<PagingData<Book>?>(null)
     val book: StateFlow<PagingData<Book>?> get() = _book
 

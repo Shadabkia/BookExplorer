@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.kia.bookexplorer.R
@@ -33,6 +33,13 @@ class BookViewHolder(
 
         binding.apply {
 
+            // Set id for each book item card for animation transition
+            ViewCompat.setTransitionName(
+                clContainer,
+                context.getString(R.string.book_card_transition_name, book.version.toString())
+            )
+
+
             tvBookTitle.text = book.title
             tvBookAuthor.text = book.authorName?.fold("") { acc, s -> "$acc, $s" }?.substring(2)
             tvBookYear.text = book.firstPublishYear.toString()
@@ -47,7 +54,7 @@ class BookViewHolder(
                 ivBookCover.setImageResource(R.drawable.hard_cover_book)
 
             root.setOnClickListener {
-                listener.onBookClicked(position = bindingAdapterPosition, book.title)
+                listener.onBookClicked(view = binding.root, book = book)
             }
         }
     }

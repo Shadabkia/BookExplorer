@@ -1,9 +1,12 @@
 package com.kia.bookexplorer.data.network.dto
 
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @JsonClass(generateAdapter = true)
 data class Book(
     @Json(name = "already_read_count")
@@ -162,4 +165,4 @@ data class Book(
     val version: Long?,
     @Json(name = "want_to_read_count")
     val wantToReadCount: Int?
-)
+) : Parcelable
