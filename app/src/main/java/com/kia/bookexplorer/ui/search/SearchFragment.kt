@@ -62,7 +62,6 @@ class SearchFragment : Fragment(), BookListener {
 
         binding?.apply {
 
-
             rvBooks.apply {
                 adapter = bookAdapter
                 itemAnimator = null
@@ -91,8 +90,6 @@ class SearchFragment : Fragment(), BookListener {
                 }
             }
         }
-
-
     }
 
     private fun initListeners() {
