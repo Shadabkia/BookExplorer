@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
@@ -53,10 +54,21 @@ class SearchFragment : Fragment(), BookListener {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        iniViews()
+        // To save fragment state when navigate up from next fragment
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.searchEvents.collect { event ->
+                when (event) {
+                    SearchEvents.InitView -> initViews()
+                    is SearchEvents.SendMessage -> Toast.makeText(requireContext(), event.message, Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+        }
+        viewModel.fragmentCreated()
+
     }
 
-    private fun iniViews() {
+    private fun initViews() {
 
         initListeners()
 

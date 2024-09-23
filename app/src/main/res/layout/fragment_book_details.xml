@@ -10,7 +10,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:paddingBottom="@dimen/margin_large"
         android:transitionName="@string/book_details_transition_name">
 
@@ -175,7 +174,7 @@
             style="@style/textRegular12"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             android:gravity="center"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="@+id/tv_items_title"
@@ -189,7 +188,7 @@
             android:id="@+id/tv_publish_years"
             style="@style/textRegular12"
             android:layout_width="60dp"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             android:gravity="center"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="@+id/tv_items_count"

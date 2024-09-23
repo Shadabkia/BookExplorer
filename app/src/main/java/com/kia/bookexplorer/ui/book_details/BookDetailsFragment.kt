@@ -84,7 +84,7 @@ class BookDetailsFragment : Fragment() {
     private fun initListeners() {
         binding?.apply {
             ivBack.setOnClickListener {
-                findNavController().popBackStack()
+                findNavController().navigateUp()
             }
         }
     }
