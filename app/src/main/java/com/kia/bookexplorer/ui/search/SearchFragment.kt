@@ -10,7 +10,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -55,12 +57,14 @@ class SearchFragment : Fragment(), BookListener {
         view.doOnPreDraw { startPostponedEnterTransition() }
 
         // To save fragment state when navigate up from next fragment
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.searchEvents.collect { event ->
-                when (event) {
-                    SearchEvents.InitView -> initViews()
-                    is SearchEvents.SendMessage -> Toast.makeText(requireContext(), event.message, Toast.LENGTH_LONG)
-                        .show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.searchEvents.collect { event ->
+                    when (event) {
+                        SearchEvents.InitView -> initViews()
+                        is SearchEvents.SendMessage -> Toast.makeText(requireContext(), event.message, Toast.LENGTH_LONG)
+                            .show()
+                    }
                 }
             }
         }

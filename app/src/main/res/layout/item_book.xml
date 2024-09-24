@@ -7,25 +7,30 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
     android:layout_marginBottom="@dimen/margin_small"
-    android:padding="8dp">
+    android:paddingVertical="8dp"
+    android:paddingEnd="8dp">
 
-    <androidx.cardview.widget.CardView
+
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_bookCover"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         app:cardCornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_bookAuthor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_bookCover"
-            android:layout_width="60dp"
-            android:layout_height="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/book_cover"
-            android:scaleType="fitXY"
+            android:maxWidth="80dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/hard_cover_book" />
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- Book Cover Image -->
 
@@ -35,13 +40,13 @@
         android:id="@+id/tv_bookTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="96dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/cv_bookCover"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Book Tsdckmslkdmclksmdclksmdclkms;ldc,sdcitle" />
 
@@ -50,13 +55,12 @@
         android:id="@+id/tv_bookAuthor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/cv_bookCover"
+        app:layout_constraintStart_toStartOf="@+id/tv_bookTitle"
         app:layout_constraintTop_toBottomOf="@id/tv_bookTitle"
         tools:text="Autsldkcmskdmcksdmclksmdcsldkcmslkdcmkjsdncjskdnchor Name" />
 
@@ -65,10 +69,9 @@
         android:id="@+id/tv_bookYear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/cv_bookCover"
+        app:layout_constraintStart_toStartOf="@+id/tv_bookTitle"
         app:layout_constraintTop_toBottomOf="@id/tv_bookAuthor"
         tools:text="2024" />
 </androidx.constraintlayout.widget.ConstraintLayout>
